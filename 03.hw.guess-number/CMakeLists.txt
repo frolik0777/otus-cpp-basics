@@ -8,11 +8,6 @@ add_executable(
 )
 
 add_executable(
-	high_scores
-	high_scores.cpp
-)
-
-add_executable(
 	argument
 	argument.cpp
 )
