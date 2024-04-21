@@ -8,11 +8,6 @@ add_executable(
 )
 
 add_executable(
-	random_value
-	random_value.cpp
-)
-
-add_executable(
 	high_scores
 	high_scores.cpp
 )

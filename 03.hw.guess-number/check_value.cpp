@@ -1,8 +1,13 @@
 #include <iostream>
+#include <ctime>
 
 int main() {
 
-	const int target_value = 54;
+	// initialize the target value as a random one
+	const int max_value = 100;
+	std::srand(std::time(nullptr)); // use current time as seed for random generator
+	const int target_value = std::rand() % 100;
+
 	int current_value = 0;
 	bool not_win = true;
 
