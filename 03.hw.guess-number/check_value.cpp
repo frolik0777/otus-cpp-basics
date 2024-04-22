@@ -4,6 +4,8 @@
 
 
 static const std::string high_scores_filename = "high_scores.txt";
+static int max_value = 100;
+
 
 // Write new high score to the records table
 int write_highscore(const std::string & user_name, const int attempts_count) {
@@ -53,7 +55,37 @@ int print_highscore_table() {
 	return 0;
 }
 
-int main() {
+
+// parse application arguments
+int parse_arguments(int argc, char** argv) {
+	while (argc) {
+		const std::string arg_value{ argv[0] };
+		--argc;
+		++argv;
+		if (arg_value == "-max") {
+			if (argc == 0) {
+				std::cerr << "Missing parameter for argument \"" << arg_value << "\"" << std::endl;
+				return -1;
+			}
+			max_value = std::stoi(argv[0]);
+			--argc;
+			++argv;
+		}
+		else {
+			std::cerr << "Unknown argument \"" << arg_value << "\"" << std::endl;
+			return -1;
+		}
+	}
+	return 0;
+}
+
+
+int main(int argc, char** argv) {
+
+	if (parse_arguments(--argc, ++argv) != 0)	 {
+		std::cerr << "Invalid arguments" << std::endl;
+		return EXIT_FAILURE;
+	}
 
 	// Ask about name
 	std::cout << "Hi! Enter your name, please:" << std::endl;
@@ -61,10 +93,12 @@ int main() {
 	std::cin >> user_name;
 
 	// initialize the target value as a random one
-	const int max_value = 100;
 	std::srand(std::time(nullptr)); // use current time as seed for random generator
-	const int target_value = std::rand() % 100;
-	// std::cout << "[DEBUG] " << target_value << std::endl;
+	const int target_value = std::rand() % max_value;
+
+	// print the debug inforamation
+	std::cout << "[DEBUG] target_value = " << target_value << std::endl;
+	std::cout << "[DEBUG] max_value = " << max_value << std::endl;
 
 	int attempts_count = 0;
 	int current_value = 0;
@@ -84,12 +118,19 @@ int main() {
 		}
 		else {
 			std::cout << "you win! attempts = " << attempts_count << std::endl;
-			write_highscore(user_name, attempts_count);
-			print_highscore_table();
 			break;
 		}
 
 	} while(true);
 
-	return 0;
+	if (write_highscore(user_name, attempts_count) != 0) {
+		std::cerr << "Unable to store results to the file " << high_scores_filename << std::endl;
+		return EXIT_FAILURE;;
+	}
+	if (print_highscore_table() != 0) {
+		std::cerr << "Unable to read results frome the file " << high_scores_filename << std::endl;
+		return EXIT_FAILURE;;
+	}
+
+	return EXIT_SUCCESS;
 }
