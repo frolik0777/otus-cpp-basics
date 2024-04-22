@@ -57,7 +57,7 @@ int print_highscore_table() {
 
 
 // parse application arguments
-int parse_arguments(int argc, char** argv) {
+void parse_arguments(int argc, char** argv) {
 	while (argc) {
 		const std::string arg_value{ argv[0] };
 		--argc;
@@ -65,27 +65,27 @@ int parse_arguments(int argc, char** argv) {
 		if (arg_value == "-max") {
 			if (argc == 0) {
 				std::cerr << "Missing parameter for argument \"" << arg_value << "\"" << std::endl;
-				return -1;
+				std::exit(EXIT_FAILURE);
 			}
 			max_value = std::stoi(argv[0]);
 			--argc;
 			++argv;
 		}
+		else if (arg_value == "-table") {
+			print_highscore_table();
+			std::exit(EXIT_SUCCESS);
+		}
 		else {
 			std::cerr << "Unknown argument \"" << arg_value << "\"" << std::endl;
-			return -1;
+			std::exit(EXIT_FAILURE);
 		}
 	}
-	return 0;
 }
 
 
 int main(int argc, char** argv) {
 
-	if (parse_arguments(--argc, ++argv) != 0)	 {
-		std::cerr << "Invalid arguments" << std::endl;
-		return EXIT_FAILURE;
-	}
+	parse_arguments(--argc, ++argv);
 
 	// Ask about name
 	std::cout << "Hi! Enter your name, please:" << std::endl;
