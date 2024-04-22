@@ -5,15 +5,19 @@
 
 
 static const std::string high_scores_filename = "high_scores.txt";
-static int max_value = 100;
+static int g_max_value = 100;
+static int g_level = 2;
 
 
 void print_help(std::ostream & file) {
 	file << "Usage:" << std::endl;
 	file << "\t -help           Show this message and exit" << std::endl;
-	file << "\t -max <value>    Set the max random value to guess, default is " << max_value << std::endl;
+	file << "\t -max <value>    Set the max random value to guess, default is " << g_max_value << std::endl;
+	file << "\t -level <value>  Set the difficulty game level (1..3), default is " << g_level << std::endl;
 	file << "\t -table          Show the high score table" << std::endl;
 	file << "\t -table-full     Show the full high score table" << std::endl;
+	file << std::endl;
+	file << "\t Don't use options -level and -max together" << std::endl;
 }
 
 int get_next_high_score(std::ifstream & in_file, int & high_score) {
@@ -147,6 +151,10 @@ int print_highscore_table(const bool bests_only) {
 
 // parse application arguments
 void parse_arguments(int argc, char** argv) {
+
+	int max_value = 0;
+	int level = 0;
+
 	while (argc) {
 		const std::string arg_value{ argv[0] };
 		--argc;
@@ -161,6 +169,28 @@ void parse_arguments(int argc, char** argv) {
 				std::exit(EXIT_FAILURE);
 			}
 			max_value = std::stoi(argv[0]);
+			if (max_value < 1) {
+				std::cerr << "Wrong argument value for \"" << arg_value << "\"" << std::endl;
+				std::exit(EXIT_FAILURE);
+			}
+			--argc;
+			++argv;
+		}
+		else if (arg_value == "-level") {
+			if (argc == 0) {
+				std::cerr << "Missing parameter for argument \"" << arg_value << "\"" << std::endl;
+				std::exit(EXIT_FAILURE);
+			}
+			level = std::stoi(argv[0]);
+			switch(level) {
+				case 1: g_max_value = 10; break;
+				case 2: g_max_value = 50; break;
+				case 3: g_max_value = 100; break;
+				default:
+					std::cerr << "Wrong argument value for \"" << arg_value << "\"" << std::endl;
+					std::exit(EXIT_FAILURE);
+					break;
+			}			
 			--argc;
 			++argv;
 		}
@@ -178,6 +208,12 @@ void parse_arguments(int argc, char** argv) {
 			std::exit(EXIT_FAILURE);
 		}
 	}
+
+	if (level && max_value) {
+		std::cerr << "Ambiguous usage of arguments -max and -level" << std::endl;
+		print_help(std::cerr);
+		std::exit(EXIT_FAILURE);
+	}
 }
 
 
@@ -185,18 +221,19 @@ int main(int argc, char** argv) {
 
 	parse_arguments(--argc, ++argv);
 
+	// initialize the target value as a random one
+	std::srand(std::time(nullptr)); // use current time as seed for random generator
+	const int target_value = std::rand() % g_max_value;
+
+	// print the debug inforamation
+	std::cout << "[DEBUG] target_value = " << target_value << std::endl;
+	std::cout << "[DEBUG] max_value = " << g_max_value << std::endl;
+
 	// Ask about name
 	std::cout << "Hi! Enter your name, please:" << std::endl;
 	std::string user_name;
 	std::cin >> user_name;
 
-	// initialize the target value as a random one
-	std::srand(std::time(nullptr)); // use current time as seed for random generator
-	const int target_value = std::rand() % max_value;
-
-	// print the debug inforamation
-	std::cout << "[DEBUG] target_value = " << target_value << std::endl;
-	std::cout << "[DEBUG] max_value = " << max_value << std::endl;
 	int attempts_count = 0;
 	int current_value = 0;
 
