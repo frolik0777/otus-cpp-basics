@@ -52,7 +52,7 @@ World::World(const std::string& worldFilePath) {
         bool isCollidable;
         stream >> std::boolalpha >> isCollidable;
 
-        Ball ball(radius, color);
+        Ball ball(radius, color, isCollidable);
         ball.setCenter(center);
         ball.setVelocity(velocity);
 

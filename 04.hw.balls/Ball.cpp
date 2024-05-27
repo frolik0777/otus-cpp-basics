@@ -3,10 +3,11 @@
 #include <cmath>
 
 
-Ball::Ball(const double radius, const Color& color):
+Ball::Ball(const double radius, const Color& color, const bool collidable):
     radius_{radius},
     mass_{M_PI * radius_ * radius_ * radius_ * 4.0 / 3.0},
-    color_{color}
+    color_{color},
+    collidable_{collidable}
 {
 
 }
@@ -71,4 +72,15 @@ double Ball::getRadius() const {
  */
 double Ball::getMass() const {
     return mass_;
+}
+
+/**
+ * @brief Возвращает флаг коллизий
+ * @details В нашем приложении шары, которые имеют
+ * isCollidable==falsee, не сталкиваются с другими объектами,
+ * и проходят сквозь них
+ */
+bool Ball::isCollidable() const
+{
+    return collidable_;
 }
