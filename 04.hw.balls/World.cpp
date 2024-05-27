@@ -60,15 +60,15 @@ World::World(const std::string& worldFilePath) {
         // В базовой части задания этот параметр
         stream >> std::boolalpha >> isCollidable;
 
-        // TODO: место для доработки.
-        // Здесь не хватает самого главного - создания
-        // объекта класса Ball со свойствами, прочитанными
-        // выше, и его помещения в контейнер balls
+        const Point center(x, y);
+        const Velocity velocity(Point(vx, vy));
+        const Color color(red, green, blue);
 
-        // После того как мы каким-то образом
-        // сконструируем объект Ball ball;
-        // добавьте его в конец контейнера вызовом
-        // balls.push_back(ball);
+        Ball ball(radius, color);
+        ball.setCenter(center);
+        ball.setVelocity(velocity);
+
+        balls.push_back(ball);
     }
 }
 
