@@ -16,3 +16,13 @@ double Color::green() const {
 double Color::blue() const {
     return b;
 }
+
+std::istream& operator>>(std::istream& stream, Color& variable)
+{
+    double r;
+    double g;
+    double b;
+    stream >> r >> g >> b;
+    variable = Color(r, g, b);
+    return stream;
+}

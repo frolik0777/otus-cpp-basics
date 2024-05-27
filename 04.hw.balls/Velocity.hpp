@@ -1,6 +1,7 @@
 #pragma once
 #include "Point.hpp"
 #include <cmath>
+#include <istream>
 
 class Velocity {
   public:
@@ -28,3 +29,5 @@ class Velocity {
   private:
     Point vec;
 };
+
+std::istream& operator>>(std::istream& stream, Velocity& variable);

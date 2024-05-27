@@ -26,43 +26,31 @@ World::World(const std::string& worldFilePath) {
     stream >> topLeft.x >> topLeft.y >> bottomRight.x >> bottomRight.y;
     physics.setWorldBox(topLeft, bottomRight);
 
-    /**
-     * TODO: хорошее место для улучшения.
-     * (x, y) и (vx, vy) - составные части объекта, также
-     * как и (red, green, blue). Опять же, можно упростить
-     * этот код, научившись читать сразу Point, Color...
-     */
-    double x;
-    double y;
-    double vx;
-    double vy;
-    double radius;
-
-    double red;
-    double green;
-    double blue;
-
-    bool isCollidable;
 
     // Здесь не хватает обработки ошибок, но на текущем
     // уровне прохождения курса нас это устраивает
     while (stream.peek(), stream.good()) {
+
         // Читаем координаты центра шара (x, y) и вектор
         // его скорости (vx, vy)
-        stream >> x >> y >> vx >> vy;
+        Point center;
+        Velocity velocity;
+        stream >> center >> velocity;
+
         // Читаем три составляющие цвета шара
-        stream >> red >> green >> blue;
+        Color color;
+        stream >> color;
+
         // Читаем радиус шара
+        double radius;
         stream >> radius;
+
         // Читаем свойство шара isCollidable, которое
         // указывает, требуется ли обрабатывать пересечение
         // шаров как столкновение. Если true - требуется.
         // В базовой части задания этот параметр
+        bool isCollidable;
         stream >> std::boolalpha >> isCollidable;
-
-        const Point center(x, y);
-        const Velocity velocity(Point(vx, vy));
-        const Color color(red, green, blue);
 
         Ball ball(radius, color);
         ball.setCenter(center);
