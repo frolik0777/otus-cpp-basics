@@ -1,6 +1,5 @@
 #include "Ball.hpp"
 #include <cmath>
-#include <cmath>
 
 
 Ball::Ball(const double radius, const Color& color, const bool collidable):
@@ -83,4 +82,10 @@ double Ball::getMass() const {
 bool Ball::isCollidable() const
 {
     return collidable_;
+}
+
+void Ball::move(const double timePerTick) {
+        Point newPos =
+            getCenter() + getVelocity().vector() * timePerTick;
+        setCenter(newPos);
 }

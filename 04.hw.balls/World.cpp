@@ -14,16 +14,7 @@ static constexpr double timePerTick = 0.001;
 World::World(const std::string& worldFilePath) {
 
     std::ifstream stream(worldFilePath);
-    /**
-     * TODO: хорошее место для улучшения.
-     * Чтение границ мира из модели
-     * Обратите внимание, что здесь и далее мы многократно
-     * читаем в объект типа Point, последовательно
-     * заполняя координаты x и у. Если что-то делаем
-     * многократно - хорошо бы вынести это в функцию
-     * и не дублировать код...
-     */
-    stream >> topLeft.x >> topLeft.y >> bottomRight.x >> bottomRight.y;
+    stream >> topLeft >> bottomRight;
     physics.setWorldBox(topLeft, bottomRight);
 
 
@@ -70,6 +61,12 @@ void World::show(Painter& painter) const {
     for (const Ball& ball : balls) {
         ball.draw(painter);
     }
+
+    // Вызываем отрисовку каждой частицы
+    for (const Dust* dust : dusts) {
+        dust->draw(painter);
+    }
+
 }
 
 /// @brief Обновляет состояние мира
@@ -94,5 +91,5 @@ void World::update(double time) {
     const auto ticks = static_cast<size_t>(std::floor(time / timePerTick));
     restTime = time - double(ticks) * timePerTick;
 
-    physics.update(balls, ticks);
+    physics.update(balls, dusts, ticks);
 }

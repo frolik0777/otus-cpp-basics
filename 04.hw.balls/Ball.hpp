@@ -15,6 +15,7 @@ public:
     double getRadius() const;
     double getMass() const;
     bool isCollidable() const;
+    void move(const double timePerTick);
 
 private:
     Velocity velocity_{};
