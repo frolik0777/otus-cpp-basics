@@ -41,6 +41,15 @@ int get_next_high_score(std::ifstream & in_file, int & high_score) {
 	return 0;
 }
 
+
+// touch the file
+// it will be created if not exist
+void touch_file(const std::string & file_name)
+{
+	std::ofstream out_file{file_name, std::ios_base::app};
+}
+
+
 // Write new high score to the records table
 // line format: <username> score1 score2 .. scoreN
 int write_highscore(const std::string & user_name, const int attempts_count) {
@@ -48,6 +57,7 @@ int write_highscore(const std::string & user_name, const int attempts_count) {
 	const std::string tmp_file = high_scores_filename + "_";
 	std::remove(tmp_file.c_str());
 
+	touch_file(high_scores_filename);
 	std::ifstream in_file{high_scores_filename, std::ios_base::in};
 	if (!in_file.is_open()) {
 		std::cout << "Failed to open file: " << high_scores_filename << "!" << std::endl;
@@ -245,11 +255,11 @@ int main(int argc, char** argv) {
 		++attempts_count;
 		std::cin >> current_value;
 
-		if (current_value < target_value) {
-			std::cout << "less than " << current_value << std::endl;
+		if (current_value > target_value) {
+			std::cout << "Hint: The value is less than " << current_value << std::endl;
 		}
-		else if (current_value > target_value) {
-			std::cout << "greater than " << current_value << std::endl;
+		else if (current_value < target_value) {
+			std::cout << "Hint: The value is greater than " << current_value << std::endl;
 		}
 		else {
 			std::cout << "you win! attempts = " << attempts_count << std::endl;
