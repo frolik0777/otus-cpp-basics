@@ -27,7 +27,7 @@ Dust::Dust(const Point& center, const Color& color):
  * @param painter контекст отрисовки
  */
 void Dust::draw(Painter& painter) const {
-    if (isLive()) {
+    if (!isDead()) {
         for (const Ball& ball: balls_) {
             ball.draw(painter);
         }
@@ -36,7 +36,7 @@ void Dust::draw(Painter& painter) const {
 
 void Dust::Explosion(const double timePerTick)
 {
-    if (isLive()) {
+    if (!isDead()) {
         for (Ball& ball: balls_) {
             ball.move(timePerTick);
         }
@@ -44,14 +44,14 @@ void Dust::Explosion(const double timePerTick)
 }
 
 
-bool Dust::isLive() const
+bool Dust::isDead() const
 {
     const auto currentTime = std::chrono::system_clock::now();
     const double delta =
         std::chrono::duration_cast<std::chrono::duration<double>>(currentTime -
                                                                   create_time_)
             .count();
-    return delta < kBallsLiveTime;
+    return delta >= kBallsLiveTime;
 }
 
 

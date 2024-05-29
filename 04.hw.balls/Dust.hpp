@@ -11,10 +11,9 @@ public:
 
     void draw(Painter& painter) const;
     void Explosion(const double timePerTick);
-    bool isLive() const;
-    bool isDead() const {return !isLive();}
+    bool isDead() const;
 
 private:
-    std::chrono::system_clock::time_point create_time_;
+    const std::chrono::system_clock::time_point create_time_;
     std::vector<Ball> balls_;
 };
