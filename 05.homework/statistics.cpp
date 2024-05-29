@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cmath>
 #include <iostream>
 #include <limits>
@@ -18,6 +19,7 @@ public:
 		if (next < m_min) {
 			m_min = next;
 		}
+		++m_cnt;
 	}
 
 	double eval() const override {
@@ -107,6 +109,40 @@ private:
 	std::vector<double> m_values{};
 };
 
+class Pct : public IStatistics {
+public:
+	explicit Pct(const size_t percentil):
+		m_name{"pct" + std::to_string(percentil)},
+		m_percentil{percentil}
+	{
+
+	}
+
+	void update(double next) override {
+		m_values.push_back(next);
+	}
+
+	double eval() const override {
+		std::sort(m_values.begin(), m_values.end());
+		const size_t indx = m_values.size() *  m_percentil / 100;
+		if (indx < m_values.size()) {
+			return m_values[indx];
+		}
+		else
+			return std::nan("");
+	}
+
+	const char * name() const override {
+		return m_name.c_str();
+	}
+
+private:
+	const std::string m_name;
+	const size_t m_percentil;
+	mutable std::vector<double> m_values{};
+};
+
+
 int main() {
 
 	std::vector<IStatistics *> stats;
@@ -114,6 +150,8 @@ int main() {
 	stats.push_back(new Max{});
 	stats.push_back(new Mean{});
 	stats.push_back(new Std{});
+	stats.push_back(new Pct{90});
+	stats.push_back(new Pct{95});
 
 	double val = 0;
 	while (std::cin >> val) {
