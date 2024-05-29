@@ -4,6 +4,7 @@
 #include "Physics.hpp"
 #include <string>
 #include <vector>
+#include <deque>
 
 class Painter;
 
@@ -21,7 +22,7 @@ class World {
     Physics physics;
     // Контейнер с шарами
     std::vector<Ball> balls;
-    std::vector<Dust> dusts;
+    std::deque<Dust> dusts;
     // Длина отрезка времени, который не был
     // учтен при прошлой симуляции. См. реализацию update
     double restTime = 0.;
