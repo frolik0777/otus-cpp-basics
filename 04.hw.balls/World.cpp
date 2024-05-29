@@ -63,8 +63,8 @@ void World::show(Painter& painter) const {
     }
 
     // Вызываем отрисовку каждой частицы
-    for (const Dust* dust : dusts) {
-        dust->draw(painter);
+    for (const Dust& dust : dusts) {
+        dust.draw(painter);
     }
 
 }

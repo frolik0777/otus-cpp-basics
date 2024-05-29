@@ -9,11 +9,14 @@ class Dust {
 public:
     Dust(const Point& center, const Color& color);
 
+    Dust(const Dust&) = default;
+    Dust& operator=(Dust&&) = default;
+
     void draw(Painter& painter) const;
     void Explosion(const double timePerTick);
     bool isLive() const;
 
 private:
-    const std::chrono::system_clock::time_point create_time_;
+    std::chrono::system_clock::time_point create_time_;
     std::vector<Ball> balls_;
 };

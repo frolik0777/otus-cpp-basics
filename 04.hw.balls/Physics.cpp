@@ -11,7 +11,7 @@ void Physics::setWorldBox(const Point& topLeft, const Point& bottomRight) {
     this->bottomRight = bottomRight;
 }
 
-void Physics::update(std::vector<Ball>& balls, std::vector<Dust*>& dusts, const size_t ticks) const {
+void Physics::update(std::vector<Ball>& balls, std::vector<Dust>& dusts, const size_t ticks) const {
 
     for (size_t i = 0; i < ticks; ++i) {
         animate(balls);
@@ -22,7 +22,7 @@ void Physics::update(std::vector<Ball>& balls, std::vector<Dust*>& dusts, const 
     }
 }
 
-void Physics::collideBalls(std::vector<Ball>& balls, std::vector<Dust*>& dusts) const {
+void Physics::collideBalls(std::vector<Ball>& balls, std::vector<Dust>& dusts) const {
     for (auto a = balls.begin(); a != balls.end(); ++a) {
         for (auto b = std::next(a); b != balls.end(); ++b) {
             if (a->isCollidable() && b->isCollidable()) {
@@ -71,16 +71,15 @@ void Physics::animate(std::vector<Ball>& balls) const {
     }
 }
 
-void Physics::animate(std::vector<Dust*>& dusts) const
+void Physics::animate(std::vector<Dust>& dusts) const
 {
-    for (Dust* dust : dusts) {
-        dust->Explosion(timePerTick);
+    for (Dust& dust : dusts) {
+        dust.Explosion(timePerTick);
     }
 
     // free 
     while(dusts.size()) {
-        if (!dusts.front()->isLive()) {
-            delete dusts.front();
+        if (!dusts.front().isLive()) {
             dusts.erase(dusts.begin());
         }
         else {
@@ -110,12 +109,12 @@ void Physics::processCollision(Ball& a, Ball& b,
 }
 
 
-void Physics::createDust(Ball& a, Ball& b, std::vector<Dust*>& dusts) const
+void Physics::createDust(Ball& a, Ball& b, std::vector<Dust>& dusts) const
 {
     const double radius_ratio = a.getRadius() / b .getRadius();
     const Point collisionPoint = a.getCenter() + 
             (b.getCenter() - a.getCenter()) * radius_ratio / 2;
 
-    Dust * dust = new Dust(collisionPoint, Color(1, 0, 0));
+    Dust dust(collisionPoint, Color(1, 0, 0));
     dusts.push_back(dust);
 }
