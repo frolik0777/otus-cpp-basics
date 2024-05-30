@@ -17,7 +17,7 @@ Dust::Dust(const Point& center, const Color& color):
         Ball ball(kBallsRadius, color, false);
         ball.setCenter(center);
         ball.setVelocity(velocity);
-        balls_.push_back(ball);
+        balls_.emplace_back(ball);
     }
 }
 

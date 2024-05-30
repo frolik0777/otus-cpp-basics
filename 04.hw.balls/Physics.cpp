@@ -111,5 +111,5 @@ void Physics::createDust(Ball& a, Ball& b, std::deque<Dust>& dusts) const
             (b.getCenter() - a.getCenter()) * radius_ratio / 2;
 
     Dust dust(collisionPoint, Color(1, 0, 0));
-    dusts.push_back(dust);
+    dusts.emplace_back(dust);
 }

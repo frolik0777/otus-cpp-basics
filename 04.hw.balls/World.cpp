@@ -47,7 +47,7 @@ World::World(const std::string& worldFilePath) {
         ball.setCenter(center);
         ball.setVelocity(velocity);
 
-        balls.push_back(ball);
+        balls.emplace_back(ball);
     }
 }
 
