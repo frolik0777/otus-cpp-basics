@@ -59,7 +59,7 @@ public:
 	}
 
 private:
-	double m_max{std::numeric_limits<double>::min()};
+	double m_max{std::numeric_limits<double>::lowest()};
 	size_t m_cnt{};
 };
 
